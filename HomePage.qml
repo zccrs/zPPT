@@ -9,10 +9,22 @@ AbstractPage {
     }
 
     Text {
+        id: title
+
         text: "用Flex和Bison自制“五仁”语言"
         font.pointSize: 40
         y: picture.y / 2 - height / 2
         anchors.horizontalCenter: parent.horizontalCenter
+        opacity: 0
+
+        Behavior on opacity {
+            NumberAnimation{ duration: 1000}
+        }
+    }
+
+    onRotationChanged: {
+        if(rotation == 0)
+            title.opacity = 1
     }
 
     Image {
