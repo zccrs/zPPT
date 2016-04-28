@@ -8,6 +8,13 @@ AbstractPage {
         id: particlesSys
     }
 
+    Text {
+        text: "用Flex和Bison自制“五仁”语言"
+        font.pointSize: 40
+        y: picture.y / 2 - height / 2
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
+
     Image {
         id: picture
         anchors.centerIn: parent

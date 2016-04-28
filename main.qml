@@ -4,7 +4,7 @@ import QtQuick.Controls 1.4
 Item {
     id: root
 
-    property int currentWebPage: 0
+    property int currentWebPage: 1
     property int easingType: Easing.InBack
     property variant bulletTextList
     property int bulletListCurrentIndex: 0
@@ -30,9 +30,6 @@ Item {
 
             pushTransition: StackViewTransition {
                 SequentialAnimation {
-                    ScriptAction {
-                        script: enterItem.rotation = stackView.depth == 2 ? 270 : 0
-                    }
                     PropertyAnimation {
                         target: enterItem
                         property: "x"
@@ -44,7 +41,7 @@ Item {
                     PropertyAnimation {
                         target: enterItem
                         property: "rotation"
-                        from: enterItem.rotation = stackView.depth == 2 ? 90 : 0
+                        from: enterItem.rotation = currentWebPage == 1 ? 90 : 0
                         to: 0
                     }
                 }
@@ -67,7 +64,7 @@ Item {
         interval: 100
 
         onTriggered: {
-            stackView.push({"item": Qt.resolvedUrl("qrc:///HomePage.qml")})
+            stackView.push({item: Qt.resolvedUrl("qrc:///HomePage.qml"), replace: true})
 
             getBulletTextByFile("data/0.txt")
         }
@@ -121,6 +118,8 @@ Item {
 
         getBulletTextByFile("data/" + currentWebPage + ".txt")
 
+        ++currentWebPage
+
         if(utility.fileExists(fileUrl)) {
             easingType = Easing.InBack
 
@@ -133,6 +132,9 @@ Item {
 
     Keys.onLeftPressed: {
         easingType = Easing.OutBack
+
+        if(currentWebPage > 1)
+            --currentWebPage
 
         stackView.pop()
     }
