@@ -6,6 +6,7 @@
 #include <QQuickView>
 #include <QTimer>
 #include <QDebug>
+#include <speechrecognition.h>
 
 #include "utility.h"
 
@@ -18,6 +19,7 @@ int main(int argc, char *argv[])
     QObject::connect(view.engine(), &QQmlEngine::quit, &app, &QGuiApplication::quit);
 
     view.rootContext()->setContextProperty("utility", new Utility(&view));
+    view.rootContext()->setContextProperty("speechRecognition", new SpeechRecognition(&view));
     view.setSource(QUrl("qrc:///main.qml"));
     view.setFlags(Qt::SplashScreen);
     view.showFullScreen();

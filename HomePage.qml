@@ -4,8 +4,6 @@ import QtQuick.Particles 2.0
 AbstractPage {
     id: root
 
-    focus: true
-
     ParticleSystem {
         id: particlesSys
     }

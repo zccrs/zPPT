@@ -4,5 +4,7 @@
         <file>HomePage.qml</file>
         <file>AbstractPage.qml</file>
         <file>WebViewPage.qml</file>
+        <file>BulletScreen.qml</file>
+        <file>BulletScreenText.qml</file>
     </qresource>
 </RCC>

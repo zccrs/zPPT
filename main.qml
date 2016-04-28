@@ -6,6 +6,8 @@ Item {
 
     property int currentWebPage: 0
     property int easingType: Easing.InBack
+    property variant bulletTextList
+    property int bulletListCurrentIndex: 0
 
     anchors.fill: parent
 
@@ -66,6 +68,34 @@ Item {
 
         onTriggered: {
             stackView.push({"item": Qt.resolvedUrl("qrc:///HomePage.qml")})
+
+            getBulletTextByFile("data/0.txt")
+        }
+    }
+
+    Component.onCompleted: {
+        bulletTextList = []
+    }
+
+    function getBulletTextByFile(fileName) {
+        var contents = utility.readFile(utility.toAbsoluteFileUrl(fileName)).split("\n")
+
+        for(var line in contents) {
+            root.bulletTextList.push(contents[line])
+        }
+    }
+
+    BulletScreen {
+        id: bulletScreen
+
+        anchors.fill: parent
+    }
+
+    Connections {
+        target: speechRecognition
+
+        onTextAppend: {
+            bulletScreen.emit(text)
         }
     }
 
@@ -73,10 +103,23 @@ Item {
         stackView.currentItem.play()
     }
 
-    Keys.onEscapePressed: Qt.quit()
+    Keys.onEscapePressed: {
+        speechRecognition.stop()
+
+        Qt.quit()
+    }
+
+    Keys.onEnterPressed: {
+        if(speechRecognition.isRecording())
+            speechRecognition.stop()
+        else
+            speechRecognition.start()
+    }
 
     Keys.onRightPressed: {
-        var fileUrl = utility.toAbsoluteFileUrl(currentWebPage + ".html")
+        var fileUrl = utility.toAbsoluteFileUrl("data/" + currentWebPage + ".html")
+
+        getBulletTextByFile("data/" + currentWebPage + ".txt")
 
         if(utility.fileExists(fileUrl)) {
             easingType = Easing.InBack
@@ -92,5 +135,25 @@ Item {
         easingType = Easing.OutBack
 
         stackView.pop()
+    }
+
+    Keys.onDownPressed: {
+        var tmp = bulletListCurrentIndex
+
+        if(bulletListCurrentIndex >= bulletTextList.length)
+            return
+
+        bulletScreen.emit(root.bulletTextList[bulletListCurrentIndex++])
+    }
+
+    Keys.onUpPressed: {
+        var tmp = bulletListCurrentIndex
+
+        if(bulletListCurrentIndex <= 0)
+            return
+
+        bulletScreen.emit(root.bulletTextList[bulletListCurrentIndex - 1])
+
+        --bulletListCurrentIndex
     }
 }

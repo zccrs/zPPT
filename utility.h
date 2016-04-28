@@ -14,6 +14,10 @@ public slots:
     QUrl screenShots() const;
     bool fileExists(const QUrl &fileUrl) const;
     QUrl toAbsoluteFileUrl(const QString &filePath) const;
+
+    int random(int min, int max) const;
+
+    QString readFile(const QUrl &fileUrl) const;
 };
 
 #endif // UTILITY_H
